@@ -31,7 +31,9 @@ class ShowService(BaseService):
 
         ShowService.check_show_in_films_range_or_raise_exception(film, show.show_time_start)
 
-        if await get_crossed_place_target(self.db, show.place_id, show.show_time_start, show_time_end):
+        if await get_crossed_place_target(
+            self.db, show.place_id, show.show_time_start, show_time_end
+        ):
             raise ConflictException("There is already show held the same time in the same place")
 
         new_show_id = await insert_show(self.db, show)
@@ -48,12 +50,14 @@ class ShowService(BaseService):
         show_time_end = show.show_time_start + timedelta(minutes=film.lasts_minutes)
 
         if any(
-                show_id != sh.id
-                for sh in await get_crossed_place_target(
-                    self.db, show.place_id, show.show_time_start, show_time_end
-                )
+            show_id != sh.id
+            for sh in await get_crossed_place_target(
+                self.db, show.place_id, show.show_time_start, show_time_end
+            )
         ):
-            raise ConflictException("there is already a show running the same time on the same place")
+            raise ConflictException(
+                "there is already a show running the same time on the same place"
+            )
 
         if time_start := show.show_time_start:
             ShowService.check_show_in_films_range_or_raise_exception(film, time_start)

@@ -1,17 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from fastapi_pagination import Page
 from schemas.place_schemas import PlaceOut, PlaceIn, PlaceUpdate
 from services.place_service import PlaceService
 from dependencies import get_admin, async_get_db
 from starlette import status
 
+from utils.pagination_utils import PaginationParams, from_response_to_page
+
 router = APIRouter(prefix="/places", tags=["places"])
 
 
-@router.get("/", response_model=list[PlaceOut])
-async def read_places(db: AsyncSession = Depends(async_get_db)):
-    return await PlaceService(db).list_places()
+@router.get("/", response_model=Page[PlaceOut])
+async def read_places(
+    page: PaginationParams = Depends(PaginationParams), db: AsyncSession = Depends(async_get_db)
+):
+    return from_response_to_page(page, await PlaceService(db).list_places())
 
 
 @router.get("/{place_id}/", response_model=PlaceOut)

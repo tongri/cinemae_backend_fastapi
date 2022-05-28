@@ -37,7 +37,7 @@ async def create_user(db: AsyncSession, user: UserIn):
 
 def create_access_token(data: dict,) -> str:
     to_encode = data.copy()
-    to_encode["exp"] = datetime.utcnow() + timedelta(minutes=15)
+    to_encode["exp"] = datetime.utcnow() + timedelta(minutes=200)
     return jwt.encode(to_encode, config("secret_key"), algorithm=config("algorithm"))
 
 

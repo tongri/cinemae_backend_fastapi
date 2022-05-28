@@ -1,4 +1,4 @@
-from crud.order_crud import create_order
+from crud.order_crud import create_order, list_orders
 from crud.place_crud import get_place_by_id
 from crud.show_crud import retrieve_show_short, update_show_busy
 from utils.exceptions_utils import ConflictException, ObjNotFoundException
@@ -18,3 +18,6 @@ class OrderService(BaseService):
 
         await update_show_busy(self.db, show_id, order.amount)
         await create_order(self.db, user_id, show_id, order)
+
+    async def get_all_orders(self, user_id: int):
+        return await list_orders(self.db, user_id)

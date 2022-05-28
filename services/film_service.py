@@ -6,7 +6,7 @@ from crud.film_crud import (
     update_film,
     is_legal_target_validate,
     delete_film,
-    is_film_busy
+    is_film_busy,
 )
 from schemas.film_schemas import FilmIn, FilmUpdate
 from utils.exceptions_utils import ObjNotFoundException, ObjUniqueException, ConflictException

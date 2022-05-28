@@ -1,4 +1,22 @@
 from collections import namedtuple, defaultdict
+import datetime
+
+
+a = {
+    "id": 3,
+    "amount": 5,
+    "show__price": 100,
+    "show__busy": 20,
+    "show__id": 32,
+    "show__place__name": "red",
+    "show__place__size": 201,
+    "show__place__id": 1,
+    "show__film__id": 2,
+    "show__film__name": "randoe",
+    "show__film__begin_date": datetime.date(2022, 5, 25),
+    "show__film__end_date": datetime.date(2022, 5, 30),
+    "show__film__lasts_minutes": 100,
+}
 
 
 def dict_fetch_all(cursor) -> list:
@@ -32,12 +50,19 @@ def get_update_set_command(data_dict: dict) -> str:
 
 
 def flat_to_object_dict(income_dict: dict) -> dict:
-    res_dict = defaultdict(dict)
+    res_dict = {}
     for k, v in income_dict.items():
         namings = k.split("__")
-        if len(namings) > 1:
-            res_dict[namings[0]][namings[1]] = v
-        else:
-            res_dict[k] = v
+        res_dict = from_keys_list_to_dict(namings, v, res_dict)
 
     return res_dict
+
+
+def from_keys_list_to_dict(keys_list: list, value, res_dict: dict):
+    if keys_list:
+        inner_key = keys_list.pop(0)
+        return {
+            **res_dict,
+            inner_key: from_keys_list_to_dict(keys_list, value, res_dict.get(inner_key, {})),
+        }
+    return value

@@ -12,14 +12,7 @@ class AppException(Exception):
 
 
 async def app_exception_handler(exc: AppException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={
-            "error": {
-                "message": str(exc)
-            },
-        },
-    )
+    return JSONResponse(status_code=exc.status_code, content={"error": {"message": str(exc)}})
 
 
 class ObjNotFoundException(AppException):
@@ -47,6 +40,5 @@ class NoContentException(AppException):
 class UnAuthorizedException(AppException):
     def __init__(self):
         super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            message="Incorrect username or password"
+            status_code=status.HTTP_401_UNAUTHORIZED, message="Incorrect username or password"
         )

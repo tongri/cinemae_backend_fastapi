@@ -186,7 +186,6 @@ order_table = {
         ],
     }
 
-
 product_table = {
         "name": product_table_name,
         "columns": [
